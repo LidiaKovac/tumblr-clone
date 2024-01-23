@@ -1,0 +1,13 @@
+.dash__container {
+  // min-height: 100vh;
+  padding-inline: 10%;
+  height: 100%;
+
+  display: flex;
+
+  main {
+    width: 60%;
+    padding: 10px;
+    border-inline: 1px solid lightgray;
+  }
+}

@@ -1,0 +1,14 @@
+aside {
+  width: 20%;
+  padding:  10px;
+
+  .aside__item {
+    display: flex;
+    justify-content: space-between;
+    .badge {
+        background-color: rgb(0, 190, 253);
+        color: black;
+        padding-inline: 2px;
+    }
+}
+}
