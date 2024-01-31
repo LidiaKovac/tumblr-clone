@@ -1,7 +1,9 @@
 import "./Post.scss";
-import { FaShare, FaHeart } from "react-icons/fa";
-import { FaRepeat } from "react-icons/fa6";
-import { BsThreeDots, BsFire, BsChatFill } from "react-icons/bs";
+import { FaRegHeart } from "react-icons/fa";
+import { BsThreeDots, BsChat } from "react-icons/bs";
+import { MdOutlineRepeat } from "react-icons/md";
+import { PiShareFat } from "react-icons/pi";
+import { AiOutlineFire } from "react-icons/ai";
 export const Post = () => {
   return (
     <div className="post">
@@ -18,24 +20,22 @@ export const Post = () => {
       <div className="post__description">lidol guy</div>
       <div className="post__tags">#kevin #kevin spn #little meow meow</div>
       <div className="post__actions">
-        <BsFire /> Blaze
+        <AiOutlineFire /> Blaze
         <div className="divider"></div>
         <div className="post__actions-activity">
-          <div className="notes">
-            1365 notes
-          </div>
+          <div className="notes">1365 notes</div>
           <div className="actions">
             <div className="share">
-              <FaShare />
+              <PiShareFat />
             </div>
             <div className="comment">
-              <BsChatFill />
+              <BsChat />
             </div>
             <div className="reblog">
-              <FaRepeat />
+              <MdOutlineRepeat />
             </div>
             <div className="like">
-              <FaHeart />
+              <FaRegHeart />
             </div>
           </div>
         </div>

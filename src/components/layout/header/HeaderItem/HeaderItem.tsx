@@ -7,8 +7,8 @@ interface IProps {
     color: string
   }
 export const HeaderItem:FC<IProps> = ({Icon, text, color}) => {
-    return <div className="header__item" style={{color}}>
-        <Icon/>
+    return <div className="header__item">
+        <Icon  style={{color}}/>
         {text}
     </div>
 }

@@ -11,7 +11,7 @@ import { IoMdQuote } from "react-icons/io";
 import "./Header.scss"
 export const Header = () => {
   return (
-    <header>
+    <header className="header">
       <HeaderItem color="white" Icon={IoText} text="Text" />
       <HeaderItem color="#FF4930" Icon={IoCamera} text="Photo" />
       <HeaderItem color="#FF8A00" Icon={IoMdQuote} text="Quote" />

@@ -1,16 +1,24 @@
-header {
+@import "../../../styles/variables";
+.header {
   display: flex;
   justify-content: space-evenly;
   background-color: #222222;
-  padding: 10px;
-  .header__item {
+  padding: 20px 10px;
+  font-size: 18px;
+  border-radius: $br;
+  &__item {
+    cursor: pointer;
+    width: calc(100% / 6);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    aspect-ratio: 1/1;
+    // aspect-ratio: 1/1;
     svg {
       transition: 0.2s;
+      width: 60%;
+      height: 60%;
+      // aspect-ratio: 1/1;
     }
     &:hover {
       svg {
