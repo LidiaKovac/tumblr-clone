@@ -4,21 +4,25 @@ import { BsThreeDots, BsChat } from "react-icons/bs";
 import { MdOutlineRepeat } from "react-icons/md";
 import { PiShareFat } from "react-icons/pi";
 import { AiOutlineFire } from "react-icons/ai";
-export const Post = () => {
+import { FC } from "react";
+export const Post:FC<{post:Post}> = ({post}) => {
   return (
     <div className="post">
       <div className="post__user">
         <div className="post__user-info">
-          <img src="assets/SPN_1117.jpg" alt="" /> somethingkevin
+          <img src={post.user.avatar} alt={post.user.blogTitle} /> {post.user.name}
         </div>
         <BsThreeDots />
       </div>
       <div className="post__content">
-        <img src="assets/post/1.jpg" alt="" />
-        <img src="assets/post/2.jpg" alt="" />
+        {
+          post.images?.map(img => {
+            return <img src={img} />
+          })
+        }
       </div>
-      <div className="post__description">lidol guy</div>
-      <div className="post__tags">#kevin #kevin spn #little meow meow</div>
+      <div className="post__description">{post.markDownContent}</div>
+      <div className="post__tags">{post.tags}</div>
       <div className="post__actions">
         <AiOutlineFire /> Blaze
         <div className="divider"></div>

@@ -10,7 +10,15 @@ import { IoIosMail, IoMdSettings } from "react-icons/io";
 import { IoPersonSharp } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { BlogSuggestion } from "../../components/BlogSuggestion/BlogSuggestion";
+import { useEffect } from "react";
+import { RootState, useAppDispatch, useAppSelector } from "../../redux/store";
+import { fetchPosts } from "../../redux/slices/postSlices";
 export const Dashboard = () => {
+  const dispatch = useAppDispatch()
+  const posts = useAppSelector((state:RootState) => state.posts)
+  useEffect( () => {
+    dispatch(fetchPosts())
+  })
   return (
     <>
       <div className="dash__container">
@@ -36,11 +44,12 @@ export const Dashboard = () => {
             <div className="line"></div>
           </div>
           <div className="main__posts">
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
+            {
+              posts.map((post) => {
+                  return <Post post={post} />
+              })
+            }
+          
           </div>
         </main>
         <Aside>
