@@ -13,7 +13,11 @@ const initialState: PostState = {
 export const fetchPosts = createAsyncThunk("post/get", (payload, { rejectWithValue }): Promise<Post[]> => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (res, rej) => {
-     const resp = await fetch(`http://localhost:3001/post`)
+     const resp = await fetch(`http://localhost:3001/post`, {
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("tumblr-token")
+      }
+     })
       if (resp.ok) {
         const char = await resp.json()
         res(char)

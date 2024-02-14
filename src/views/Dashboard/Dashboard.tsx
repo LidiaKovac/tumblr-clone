@@ -18,7 +18,7 @@ export const Dashboard = () => {
   const posts = useAppSelector((state:RootState) => state.posts)
   useEffect( () => {
     dispatch(fetchPosts())
-  })
+  }, [])
   return (
     <>
       <div className="dash__container">

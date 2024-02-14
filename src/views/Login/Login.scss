@@ -1,0 +1,12 @@
+.login__wrap {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    form {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px
+    }
+}
