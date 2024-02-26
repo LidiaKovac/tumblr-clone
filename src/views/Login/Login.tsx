@@ -1,10 +1,11 @@
 import { FormEvent } from "react"
-import { login } from "../../api"
 import "./Login.scss"
+import { useLogin } from "../../hooks/useLogin"
 export const Login = () => {
+    const {doLogin, error} = useLogin()
     const handleLogin = async (event:FormEvent) => {
         event.preventDefault()
-        login(new FormData(event.target as HTMLFormElement))
+        doLogin(new FormData(event.target as HTMLFormElement))
     }
     return <div className="login__wrap">
     <form onSubmit={handleLogin}>
@@ -12,5 +13,6 @@ export const Login = () => {
         <input type="password" name="password"/>
         <button>Login</button>
     </form>
+    {error && <h2>{error}</h2>}
     </div>
 }

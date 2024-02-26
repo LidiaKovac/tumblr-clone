@@ -1,30 +1,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import httpClient from '../../api/axiosConfig'
 
 export interface PostState {
-  posts: Post[],
+  data: Post[],
   loading: boolean
+  error: string | null
 }
 
 const initialState: PostState = {
-  posts: [],
-  loading: true
+  data: [],
+  loading: true,
+  error: null
 }
 
 export const fetchPosts = createAsyncThunk("post/get", (payload, { rejectWithValue }): Promise<Post[]> => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (res, rej) => {
-     const resp = await fetch(`http://localhost:3001/post`, {
-      headers: {
-        authorization: "Bearer " + localStorage.getItem("tumblr-token")
+      try {
+        
+        const resp = await httpClient.get("/post/dashboard")
+        if (resp) res(resp.data);
+      } catch (error) {
+        rej(rejectWithValue("The error was caught by the axios interceptor!"));
       }
-     })
-      if (resp.ok) {
-        const char = await resp.json()
-        res(char)
-      } else {
-        const err = await resp.json()
-        rej(rejectWithValue(err))
-      }
+      
     })
   })
 
@@ -39,8 +38,12 @@ export const postSlice = createSlice({
         state.loading = true
       })
       builder.addCase(fetchPosts.fulfilled, (state, action) => {
-        state.posts = action.payload
+        state.data = action.payload
       })
+      builder.addCase(fetchPosts.rejected, (state, action) => {
+        console.log(action.payload)
+        state.error = (action.payload as ErrorActionPayload).message;
+      });
   },
 })
 

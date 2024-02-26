@@ -13,56 +13,93 @@ import { BlogSuggestion } from "../../components/BlogSuggestion/BlogSuggestion";
 import { useEffect } from "react";
 import { RootState, useAppDispatch, useAppSelector } from "../../redux/store";
 import { fetchPosts } from "../../redux/slices/postSlices";
+import { useNavigate } from "react-router-dom";
+import { fetchMe, fetchUsers } from "../../redux/slices/userSlice";
+import { PostCreator } from "../../components/PostCreator/PostCreator";
 export const Dashboard = () => {
-  const dispatch = useAppDispatch()
-  const posts = useAppSelector((state:RootState) => state.posts)
-  useEffect( () => {
-    dispatch(fetchPosts())
-  }, [])
+  const dispatch = useAppDispatch();
+  const posts = useAppSelector((state: RootState) => state.posts.data);
+  const users = useAppSelector((state: RootState) => state.users.data);
+  const me = useAppSelector((state: RootState) => state.users.me);
+  const errors = useAppSelector((state: RootState) => state.errors.data);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (
+      localStorage.getItem("tumblr-token") ||
+      !errors.some((err) => err.message.toLowerCase().includes("token"))
+    ) {
+      dispatch(fetchPosts());
+      dispatch(fetchUsers());
+      dispatch(fetchMe());
+    } else navigate("/login");
+  }, []);
   return (
     <>
       <div className="dash__container">
         <Aside>
-          <img src="assets/logo-white.png" className="logo" alt="" />
-          <AsideItem Icon={BiSolidHomeHeart} text="Home" notifications={41} />
-          <AsideItem Icon={BiCompass} text="Explore" notifications={null} />
-          <AsideItem Icon={HiLightningBolt} text="Activity" notifications={3} />
-          <AsideItem
-            Icon={TbMessageCircle2Filled}
-            text="Messages"
-            notifications={null}
-          />
-          <AsideItem Icon={IoIosMail} text="Inbox" notifications={null} />
-          <AsideItem Icon={IoPersonSharp} text="Account" notifications={null} />
-          <AsideItem Icon={IoMdSettings} text="Settings" notifications={null} />
+          <>
+            <img src="assets/logo-white.png" className="logo" alt="" />
+            <AsideItem Icon={BiSolidHomeHeart} text="Home" notifications={41} />
+            <AsideItem Icon={BiCompass} text="Explore" notifications={null} />
+            <AsideItem
+              Icon={HiLightningBolt}
+              text="Activity"
+              notifications={3}
+            />
+            <AsideItem
+              Icon={TbMessageCircle2Filled}
+              text="Messages"
+              notifications={null}
+            />
+            <AsideItem Icon={IoIosMail} text="Inbox" notifications={null} />
+            <AsideItem
+              Icon={IoPersonSharp}
+              text="Account"
+              notifications={null}
+            />
+            <AsideItem
+              Icon={IoMdSettings}
+              text="Settings"
+              notifications={null}
+            />
+            {me && <BlogSuggestion isSuggestion={false} user={me} />}
+            <h3
+              onClick={() => {
+                localStorage.removeItem("tumblr-token");
+                navigate("/login");
+              }}
+            >
+              Logout
+            </h3>
+          </>
         </Aside>
         <main>
           <Header />
+          <PostCreator/>
           <div className="divider">
             <div className="line"></div>
             See new posts
             <div className="line"></div>
           </div>
           <div className="main__posts">
-            {
-              posts.map((post) => {
-                  return <Post post={post} />
-              })
-            }
-          
+            {posts.map((post) => {
+              return <Post post={post} />;
+            })}
           </div>
         </main>
         <Aside>
-          <div className="search-input__wrap">
-            <FaSearch />
-            <input type="text" placeholder="Search on Tumblr" />
-          </div>
-          <h3>Check out these blogs</h3>
-          <BlogSuggestion/>
-          <BlogSuggestion/>
-          <BlogSuggestion/>
-          <BlogSuggestion/>
-          
+          <>
+            <div className="search-input__wrap">
+              <FaSearch />
+              <input type="text" placeholder="Search on Tumblr" />
+            </div>
+            <h3>Check out these blogs</h3>
+            {users.slice(0, 4).map((user) => {
+              return (
+                <BlogSuggestion key={user.id} user={user} isSuggestion={true} />
+              );
+            })}
+          </>
         </Aside>
       </div>
     </>
