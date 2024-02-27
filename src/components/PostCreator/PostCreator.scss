@@ -1,0 +1,27 @@
+.mdxeditor-root-contenteditable {
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+
+    max-width: 100%;
+  }
+  ._imageWrapper_19o4e_870 {
+    max-width: 100%;
+  }
+}
+
+.post-creator__inner {
+  p {
+    width: 100%;
+  }
+  img {
+    width: 100% !important;
+    &._focusedImage_19o4e_866 {
+      outline: none;
+    }
+  }
+  div:has(> ._imageResizer_19o4e_977) {
+    display: none;
+  }
+}

@@ -11,6 +11,9 @@ import { fetchPosts } from "../../../redux/slices/postSlices";
 import { useNotes } from "../../../hooks/useNotes";
 import { useComments } from "../../../hooks/useComments";
 import httpClient from "../../../api/axiosConfig";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 export const Post: FC<{ post: Post }> = ({ post }) => {
   const dispatch = useAppDispatch();
   const { notes, openNotes, isOpen } = useNotes();
@@ -64,11 +67,15 @@ export const Post: FC<{ post: Post }> = ({ post }) => {
             <BsThreeDots />
           </div>
           <div className="post__content">
-            {post.originalPost?.images?.map((img) => {
+            <Markdown
+            rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+              {post.originalPost!.markDownContent}
+            </Markdown>
+            {/* {post.originalPost?.images?.map((img) => {
               return <img src={img} />;
-            })}
+            })} */}
           </div>
-          <div className="post__description">
+          {/* <div className="post__description">
             {post.originalPost?.markDownContent}
             {post.markDownContent.length > 0 && (
               <>
@@ -76,7 +83,7 @@ export const Post: FC<{ post: Post }> = ({ post }) => {
                 {post.markDownContent}
               </>
             )}
-          </div>
+          </div> */}
           <div className="post__tags">
             {post.tags.map((tag) => (
               <span> {"#" + tag} </span>
@@ -86,11 +93,12 @@ export const Post: FC<{ post: Post }> = ({ post }) => {
       ) : (
         <>
           <div className="post__content">
-            {post.images?.map((img) => {
-              return <img src={img} />;
-            })}
+          <Markdown
+            rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+              {post.markDownContent}
+            </Markdown>
           </div>
-          <div className="post__description">{post.markDownContent}</div>
+          {/* <div className="post__description">{post.markDownContent}</div> */}
           <div className="post__tags">
             {post.tags.map((tag) => (
               <span> {"#" + tag} </span>

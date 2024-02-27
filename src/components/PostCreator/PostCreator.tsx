@@ -1,32 +1,95 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import httpClient from "../../api/axiosConfig";
 import { Validator } from "../../utils/validator";
 import { useAppDispatch } from "../../redux/store";
 import { addError } from "../../redux/slices/globalErrorsSlice";
 import { fetchPosts } from "../../redux/slices/postSlices";
+import "./PostCreator.scss"
+import {
+  BlockTypeSelect,
+  BoldItalicUnderlineToggles,
+  CodeToggle,
+  CreateLink,
+  InsertCodeBlock,
+  InsertImage,
+  InsertTable,
+  ListsToggle,
+  MDXEditor,
+  UndoRedo,
+  headingsPlugin,
+  imagePlugin,
+  linkPlugin,
+  listsPlugin,
+  quotePlugin,
+  thematicBreakPlugin,
+  toolbarPlugin,
+} from "@mdxeditor/editor";
+import "@mdxeditor/editor/style.css";
 
 export const PostCreator = () => {
+  const [postContent, setPostContent] = useState<string>("");
   const dispatch = useAppDispatch();
+
   const handleSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
-    if (!Validator.validatePost(new FormData(ev.target as HTMLFormElement))) {
+    if (postContent.length <= 0) {
       dispatch(
         addError({
           message: "Validation failed",
           thrownAt: new Date().toString(),
         })
       );
-      return 
+      return;
     }
-    await httpClient.post("/post", new FormData(ev.target as HTMLFormElement));
-    await dispatch(fetchPosts())
+    const fd = new FormData(ev.target as HTMLFormElement)
+    fd.append("markDownContent", postContent)
+    await httpClient.post("/post", fd);
+    await dispatch(fetchPosts());
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea name="markDownContent" cols={30} rows={10}></textarea>
+    <div className="post-creator__wrap">
+      <form onSubmit={handleSubmit}>
+      <MDXEditor
+      contentEditableClassName="post-creator__inner"
+      suppressHtmlProcessing={true}
+        markdown={postContent}
+        onChange={setPostContent}
+        plugins={[
+          headingsPlugin(),
+          quotePlugin(),
+          listsPlugin(),
+          thematicBreakPlugin(),
+          linkPlugin(),
+          toolbarPlugin({
+            toolbarContents: () => (
+              <>
+          
+                <UndoRedo/>
+                <BoldItalicUnderlineToggles />
+                <BlockTypeSelect />
+                <CodeToggle />
+                <CreateLink />
+                <InsertCodeBlock />
+                <InsertImage />
+                <InsertTable />
+                <ListsToggle />
+              </>
+            ),
+          }),
+          imagePlugin({
+            imageUploadHandler: (image: File) => {
+              const fd = new FormData();
+              fd.append("image", image);
+              return httpClient
+                .post("/post/upload", fd)
+                .then((res) => res.data.url);
+            },
+          }),
+        ]}
+      />
       <input type="text" name="tags" />
-      <input type="file" name="imageFiles" multiple />
       <button>Submit</button>
-    </form>
+    </form> 
+    </div>
   );
 };
