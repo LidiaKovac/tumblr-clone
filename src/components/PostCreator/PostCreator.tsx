@@ -1,91 +1,82 @@
-import { FormEvent, useState } from "react";
-import httpClient from "../../api/axiosConfig";
-import { useAppDispatch } from "../../redux/store";
+import { FC, FormEvent, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { addError } from "../../redux/slices/globalErrorsSlice";
 import { fetchPosts } from "../../redux/slices/postSlices";
-import "./PostCreator.scss"
+import "./PostCreator.scss";
 import { BlockNoteEditor } from "@blocknote/core";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import "@blocknote/react/style.css";
-import { uploadFile } from "../../api";
-
-export const PostCreator = () => {
-  const [postContent, setPostContent] = useState<string>("");
+import { uploadFile, uploadPost } from "../../api";
+import { setIsOpen } from "../../redux/slices/postCreatorSlice";
+interface PostCreatorProps {
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
+}
+export const PostCreator: FC<PostCreatorProps> = () => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users.me);
+  const isOpen = useAppSelector((state) => state.postCreator.isOpen);
+  const [postContent, setPostContent] = useState<string>("");
+
   const editor: BlockNoteEditor = useBlockNote({
     uploadFile: uploadFile,
-    onEditorContentChange: async(editor) => {
-      console.log(editor)
-      const markdownFromBlocks = await editor.blocksToMarkdownLossy(editor.topLevelBlocks);
-      setPostContent(markdownFromBlocks)
-    }
-
+    onEditorContentChange: async (editor) => {
+      const markdownFromBlocks = await editor.blocksToMarkdownLossy(
+        editor.topLevelBlocks
+      );
+      setPostContent(markdownFromBlocks);
+    },
   });
   const handleSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
     if (postContent.length <= 0) {
       dispatch(
         addError({
-          message: "Validation failed",
+          message: "Your post cannot be empty!",
           thrownAt: new Date().toString(),
         })
       );
       return;
     }
-    const fd = new FormData(ev.target as HTMLFormElement)
-    fd.append("markDownContent", postContent)
-    await httpClient.post("/post", fd);
+    await uploadPost(ev.target as HTMLFormElement, postContent);
     await dispatch(fetchPosts());
+    dispatch(setIsOpen(false));
+    (ev.target as HTMLFormElement).reset()
   };
-  
 
   return (
-    <div className="post-creator__wrap">
-      <form onSubmit={handleSubmit}>
-        <BlockNoteView editor={editor}
-        />
-      {/* <MDXEditor
-      contentEditableClassName="post-creator__inner"
-      suppressHtmlProcessing={true}
-        markdown={postContent}
-        onChange={setPostContent}
-        plugins={[
-          headingsPlugin(),
-          quotePlugin(),
-          listsPlugin(),
-          thematicBreakPlugin(),
-          linkPlugin(),
-          toolbarPlugin({
-            toolbarContents: () => (
-              <>
-          
-                <UndoRedo/>
-                <BoldItalicUnderlineToggles />
-                <BlockTypeSelect />
-                <CodeToggle />
-                <CreateLink />
-                <InsertCodeBlock />
-                <InsertImage />
-                <InsertTable />
-                <ListsToggle />
-              </>
-            ),
-          }),
-          imagePlugin({
-            imageUploadHandler: (image: File) => {
-              const fd = new FormData();
-              fd.append("image", image);
-              return httpClient
-                .post("/post/upload", fd)
-                .then((res) => res.data.url);
-            },
-          }),
-        ]}
-      /> */}
-      
-      <input type="text" name="tags" />
-      <button>Submit</button>
-    </form> 
-    </div>
+    <>
+      {isOpen && (
+        <div className="post-creator">
+          <div className="post-creator__backdrop"></div>
+          <div className="post-creator__wrap">
+            <div className="post-creator__user">
+              <img src={user?.avatar} alt={user?.name} />
+              {user?.name}
+            </div>
+            <form onSubmit={handleSubmit}>
+              <BlockNoteView editor={editor} />
+
+              <div className="post-creator__footer">
+                <input
+                  placeholder="Add Tags, separated by comma"
+                  type="text"
+                  name="tags"
+                />
+                <div className="post-creator__actions">
+                  <button
+                    onClick={() => dispatch(setIsOpen(false))}
+                    type="button"
+                  >
+                    Close
+                  </button>
+                  <button>Publish</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

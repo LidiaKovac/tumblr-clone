@@ -23,6 +23,12 @@
     img {
       max-width: 100%;
     }
+    *:not(img) {
+      &:has(>img) {
+        padding-inline: 0;
+      }
+      padding-inline: 20px;
+    }
   }
   &__description,
   &__tags {

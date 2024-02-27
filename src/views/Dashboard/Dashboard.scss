@@ -7,10 +7,10 @@
   display: flex;
 
   main {
-    width: 45%;
+    width: 55%;
     padding: 20px;
     border-inline: 1px solid #222222;
-    max-height: calc(100dvh - 40px);
+    max-height: 100vh;
     overflow-y: auto;
     .main__posts {
       display: flex;
@@ -38,3 +38,4 @@
     }
   }
 }
+

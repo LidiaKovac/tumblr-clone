@@ -1,5 +1,5 @@
 import { FC, ReactElement } from "react";
-import "./Aside.scss"
+import "./Aside.scss";
 interface IProps {
   children: ReactElement[] | ReactElement;
 }

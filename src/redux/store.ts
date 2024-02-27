@@ -3,11 +3,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import postSlice from './slices/postSlices'
 import userSlice from './slices/userSlice'
 import errorSlice from './slices/globalErrorsSlice'
+import postCreatorSlice from './slices/postCreatorSlice'
 
 const combinedReducers = combineReducers({
   posts: postSlice,
   users: userSlice,
-  errors: errorSlice
+  errors: errorSlice,
+  postCreator: postCreatorSlice
 })
 
 export const store = configureStore({

@@ -1,0 +1,21 @@
+@media (max-width: 1125px) {
+    aside:first-of-type {
+      width: 100px;
+      .aside__item {
+        justify-content: center;
+        svg {
+          $svg-size: 25px;
+          width: $svg-size;
+          height: $svg-size;
+        }
+      }
+    }
+    .dash__container{
+        padding-inline: 0;
+        main {
+        width: 65%;
+    }}
+    aside:last-of-type {
+        width: 35%
+    }
+  }

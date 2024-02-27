@@ -1,19 +1,25 @@
 @import "/src/styles/color";
+$max-container-size: 180px;
 
 aside {
-  width: 20%;
+  &:first-of-type {
+    width: 20%;
+  }
+  &:last-of-type {
+    width: 25%;
+  }
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  
-  
+  container-type: inline-size;
 
   img.logo {
     width: 50%;
     align-self: center;
     margin-bottom: 20px;
   }
+
   .search-input__wrap {
     background-color: #404040;
     padding: 5px 10px;
@@ -31,38 +37,67 @@ aside {
       width: 100%;
       height: 100%;
       transition: 0.2s;
+
       &:active,
       &:focus,
       &:focus-visible {
         outline: none;
       }
+
       &::placeholder {
         color: white;
       }
     }
+
     &:has(input:focus) {
       background-color: #222222;
+
       input::placeholder {
         color: #797979;
       }
     }
   }
+
   .aside__item {
     font-size: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+
     &-signature {
       display: flex;
       align-items: center;
       gap: 10px;
+
+      span {
+      }
     }
+
+    @container (max-width: #{$max-container-size}) {
+      & {
+        position: relative;
+      }
+
+      &-signature {
+        span {
+          display: none;
+        }
+      }
+
+      .badge {
+        position: absolute;
+        right: 20%;
+        transform: translateY();
+      }
+    }
+
     svg {
       $icon-size: 20px;
       width: $icon-size;
       height: $icon-size;
     }
+
     .badge {
       background-color: $tumblr-blue;
       color: black;
@@ -72,6 +107,15 @@ aside {
       font-weight: bold;
       text-align: center;
       // line-height: 100%;
+    }
+  }
+
+  .blog-suggestion {
+    @container (max-width: #{$max-container-size}) {
+      &__data {
+        display: none;
+      }
+      justify-content: center;
     }
   }
 }

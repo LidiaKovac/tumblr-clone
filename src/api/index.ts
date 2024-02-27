@@ -29,8 +29,14 @@ export const likeByPostId = async (postId: string) => {
   }
 };
 
-export const uploadFile = async(img:File) => {
-  const fd = new FormData()
-  fd.append("image", img)
-  return (await httpClient.post("/post/upload", fd)).data.url
-}
+export const uploadFile = async (img: File) => {
+  const fd = new FormData();
+  fd.append("image", img);
+  return (await httpClient.post("/post/upload", fd)).data.url;
+};
+
+export const uploadPost = async (form: HTMLFormElement, content: string) => {
+  const fd = new FormData(form);
+  fd.append("markDownContent", content);
+  await httpClient.post("/post", fd);
+};
