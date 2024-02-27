@@ -1,35 +1,26 @@
 import { FormEvent, useState } from "react";
 import httpClient from "../../api/axiosConfig";
-import { Validator } from "../../utils/validator";
 import { useAppDispatch } from "../../redux/store";
 import { addError } from "../../redux/slices/globalErrorsSlice";
 import { fetchPosts } from "../../redux/slices/postSlices";
 import "./PostCreator.scss"
-import {
-  BlockTypeSelect,
-  BoldItalicUnderlineToggles,
-  CodeToggle,
-  CreateLink,
-  InsertCodeBlock,
-  InsertImage,
-  InsertTable,
-  ListsToggle,
-  MDXEditor,
-  UndoRedo,
-  headingsPlugin,
-  imagePlugin,
-  linkPlugin,
-  listsPlugin,
-  quotePlugin,
-  thematicBreakPlugin,
-  toolbarPlugin,
-} from "@mdxeditor/editor";
-import "@mdxeditor/editor/style.css";
+import { BlockNoteEditor } from "@blocknote/core";
+import { BlockNoteView, useBlockNote } from "@blocknote/react";
+import "@blocknote/react/style.css";
+import { uploadFile } from "../../api";
 
 export const PostCreator = () => {
   const [postContent, setPostContent] = useState<string>("");
   const dispatch = useAppDispatch();
+  const editor: BlockNoteEditor = useBlockNote({
+    uploadFile: uploadFile,
+    onEditorContentChange: async(editor) => {
+      console.log(editor)
+      const markdownFromBlocks = await editor.blocksToMarkdownLossy(editor.topLevelBlocks);
+      setPostContent(markdownFromBlocks)
+    }
 
+  });
   const handleSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
     if (postContent.length <= 0) {
@@ -46,10 +37,14 @@ export const PostCreator = () => {
     await httpClient.post("/post", fd);
     await dispatch(fetchPosts());
   };
+  
+
   return (
     <div className="post-creator__wrap">
       <form onSubmit={handleSubmit}>
-      <MDXEditor
+        <BlockNoteView editor={editor}
+        />
+      {/* <MDXEditor
       contentEditableClassName="post-creator__inner"
       suppressHtmlProcessing={true}
         markdown={postContent}
@@ -86,7 +81,8 @@ export const PostCreator = () => {
             },
           }),
         ]}
-      />
+      /> */}
+      
       <input type="text" name="tags" />
       <button>Submit</button>
     </form> 

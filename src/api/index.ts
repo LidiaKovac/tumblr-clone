@@ -28,3 +28,9 @@ export const likeByPostId = async (postId: string) => {
     console.log(error);
   }
 };
+
+export const uploadFile = async(img:File) => {
+  const fd = new FormData()
+  fd.append("image", img)
+  return (await httpClient.post("/post/upload", fd)).data.url
+}

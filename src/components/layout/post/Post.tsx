@@ -18,13 +18,16 @@ export const Post: FC<{ post: Post }> = ({ post }) => {
   const dispatch = useAppDispatch();
   const { notes, openNotes, isOpen } = useNotes();
   const { comments, openComments, isCommentOpen, addComment } = useComments();
-  const handleLike = async() => {
+  const handleLike = async () => {
     await likeByPostId(post.reblog ? post.originalPost!.id : post.id);
     await dispatch(fetchPosts());
   };
   const handleComment = async (ev: FormEvent) => {
     ev.preventDefault();
-    await addComment(post.reblog ? post.originalPost! : post, new FormData(ev.target as HTMLFormElement));
+    await addComment(
+      post.reblog ? post.originalPost! : post,
+      new FormData(ev.target as HTMLFormElement)
+    );
     await dispatch(fetchPosts());
   };
 
@@ -37,7 +40,7 @@ export const Post: FC<{ post: Post }> = ({ post }) => {
     } else {
       await httpClient.post("/post/" + post.originalPost!.id + "/reblog", fd);
     }
-    await dispatch(fetchPosts())
+    await dispatch(fetchPosts());
   };
   return (
     <div className="post">
@@ -67,8 +70,7 @@ export const Post: FC<{ post: Post }> = ({ post }) => {
             <BsThreeDots />
           </div>
           <div className="post__content">
-            <Markdown
-            rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+            <Markdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
               {post.originalPost!.markDownContent}
             </Markdown>
             {/* {post.originalPost?.images?.map((img) => {
@@ -93,8 +95,7 @@ export const Post: FC<{ post: Post }> = ({ post }) => {
       ) : (
         <>
           <div className="post__content">
-          <Markdown
-            rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+            <Markdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
               {post.markDownContent}
             </Markdown>
           </div>
@@ -119,7 +120,12 @@ export const Post: FC<{ post: Post }> = ({ post }) => {
           >
             {post.reblog ? post.originalPost?.notes : post.notes} notes
           </div>
-          {isOpen && <div>Comments: {notes?.comments.map((n) => n.user.name + " " + n.content)}</div>}
+          {isOpen && (
+            <div>
+              Comments:{" "}
+              {notes?.comments.map((n) => n.user.name + " " + n.content)}
+            </div>
+          )}
           {isOpen && <div>Likes: {notes?.likes.map((n) => n.user.name)}</div>}
           {isOpen && <div>Rb: {notes?.reblogs.map((n) => n.user.name)}</div>}
           <div className="actions">
