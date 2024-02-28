@@ -1,7 +1,6 @@
 import { FC, FormEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { addError } from "../../redux/slices/globalErrorsSlice";
-import { fetchPosts } from "../../redux/slices/postSlices";
 import "./PostCreator.scss";
 import { BlockNoteEditor } from "@blocknote/core";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
@@ -39,9 +38,9 @@ export const PostCreator: FC<PostCreatorProps> = () => {
       return;
     }
     await uploadPost(ev.target as HTMLFormElement, postContent);
-    await dispatch(fetchPosts());
+    // await dispatch(fetchPosts());
     dispatch(setIsOpen(false));
-    (ev.target as HTMLFormElement).reset()
+    (ev.target as HTMLFormElement).reset();
   };
 
   return (

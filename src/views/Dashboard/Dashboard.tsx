@@ -10,24 +10,27 @@ import { IoIosMail, IoMdSettings } from "react-icons/io";
 import { IoPersonSharp } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { BlogSuggestion } from "../../components/BlogSuggestion/BlogSuggestion";
-import { useEffect, useState } from "react";
-import { RootState, useAppDispatch, useAppSelector } from "../../redux/store";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { fetchPosts } from "../../redux/slices/postSlices";
 import { useNavigate } from "react-router-dom";
 import { fetchMe, fetchUsers } from "../../redux/slices/userSlice";
 import { PostCreator } from "../../components/PostCreator/PostCreator";
 import { setIsOpen } from "../../redux/slices/postCreatorSlice";
+import { Loader } from "../../components/Loader/Loader";
 export const Dashboard = () => {
   const dispatch = useAppDispatch();
   const posts = useAppSelector((state) => state.posts.data);
+  const loading = useAppSelector((state) => state.posts.loading);
+
   const users = useAppSelector((state) => state.users.data);
   const me = useAppSelector((state) => state.users.me);
   const errors = useAppSelector((state) => state.errors.data);
-  const isOpen = useAppSelector((state) => state.postCreator.isOpen)
+  const isOpen = useAppSelector((state) => state.postCreator.isOpen);
   const navigate = useNavigate();
-  const handleSetIsOpen = (val:boolean) => {
-    dispatch(setIsOpen(val))
-  }
+  const handleSetIsOpen = (val: boolean) => {
+    dispatch(setIsOpen(val));
+  };
   useEffect(() => {
     if (
       localStorage.getItem("tumblr-token") ||
@@ -81,16 +84,19 @@ export const Dashboard = () => {
         <main>
           <Header />
           <PostCreator isOpen={isOpen} setIsOpen={handleSetIsOpen} />
-          <div className="divider">
+          <div className="divider" onClick={() => dispatch(fetchPosts())}>
             <div className="line"></div>
             See new posts
             <div className="line"></div>
           </div>
+          {loading ? <Loader />
+          :  
           <div className="main__posts">
             {posts.map((post) => {
               return <Post post={post} />;
             })}
           </div>
+          }
         </main>
         <Aside>
           <>

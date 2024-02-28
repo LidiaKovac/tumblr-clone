@@ -39,10 +39,12 @@ export const postSlice = createSlice({
       })
       builder.addCase(fetchPosts.fulfilled, (state, action) => {
         state.data = action.payload
+        state.loading = false
       })
       builder.addCase(fetchPosts.rejected, (state, action) => {
         console.log(action.payload)
         state.error = (action.payload as ErrorActionPayload).message;
+        state.loading = false
       });
   },
 })
