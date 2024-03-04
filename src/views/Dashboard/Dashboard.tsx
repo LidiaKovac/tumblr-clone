@@ -10,7 +10,7 @@ import { IoIosMail, IoMdSettings } from "react-icons/io";
 import { IoPersonSharp } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { BlogSuggestion } from "../../components/BlogSuggestion/BlogSuggestion";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { fetchPosts, fetchPostsPublic } from "../../redux/slices/postSlices";
 import { useNavigate } from "react-router-dom";
@@ -48,7 +48,7 @@ export const Dashboard = () => {
   }, []);
   return (
     <>
-    {!me && <Login/>}
+      {!me && <Login />}
       <div className="dash__container">
         <Aside>
           <>

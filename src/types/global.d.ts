@@ -54,7 +54,6 @@ interface User {
 }
 
 interface UserHook {
-  user: User | null;
   doLogin: (fd: FormData) => Promise<void>;
   error: string | null;
 }

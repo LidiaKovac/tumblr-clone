@@ -46,6 +46,7 @@ export const fetchMe = createAsyncThunk(
     return new Promise(async (res, rej) => {
       try {
         const resp = await httpClient.get("/user/me");
+        console.log(resp)
         if (resp) res(resp.data);
       } catch (error) {
         rej(rejectWithValue("The error was caught by the axios interceptor!"));

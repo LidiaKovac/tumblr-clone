@@ -10,9 +10,25 @@ export const Login = () => {
   return (
     <div className="login__wrap">
       <form onSubmit={handleLogin}>
-        <input type="text" name="email" />
-        <input type="password" name="password" />
-        <button>Login</button>
+        <img src="public/assets/post/SPN_1112.jpg" alt="" />
+        <div className="form__area">
+          <h2>This is</h2>
+          <img src="public/assets/logo-white.png" alt="" />
+          <h2>but I made it Kevin Tran themed.</h2>
+          <input
+            className="form__input"
+            type="text"
+            name="email"
+            placeholder="Enter your email"
+          />
+          <input
+            className="form__input"
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+          />
+          <button type="submit">Login</button>
+        </div>
       </form>
       {error && <h2>{error}</h2>}
     </div>
